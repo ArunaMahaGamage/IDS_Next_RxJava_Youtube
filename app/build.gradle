@@ -38,4 +38,7 @@ dependencies {
     // FastAndroidNetworking Dependency
     implementation 'com.amitshekhar.android:rx2-android-networking:1.0.2'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
+
+    //circle imageview
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 }

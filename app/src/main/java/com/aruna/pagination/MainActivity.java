@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -19,13 +20,14 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.processors.PublishProcessor;
 import io.reactivex.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecyclerAdapter.RecyclerAdapterEvent {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private PublishProcessor<Integer> paginator = PublishProcessor.create();
 
     private PaginationAdapter paginationAdapter;
+    private RecyclerAdapter recyclerAdapter;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private boolean loading = false;
@@ -33,19 +35,26 @@ public class MainActivity extends AppCompatActivity {
     private final int VISIBLE_THRESHOLD = 1;
     private int lastVisibleItem, totalItemCount;
     private LinearLayoutManager layoutManager;
+    private Context context;
+    List<String> items = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        context = getApplicationContext();
+
         recyclerView = findViewById(R.id.recyclerView);
         progressBar = findViewById(R.id.progressBar);
         layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        paginationAdapter = new PaginationAdapter();
-        recyclerView.setAdapter(paginationAdapter);
+//        paginationAdapter = new PaginationAdapter();
+//        recyclerView.setAdapter(paginationAdapter);
+
+        recyclerAdapter = new RecyclerAdapter(this, items, this);
+        recyclerView.setAdapter(recyclerAdapter);
         setUpLoadMoreListener();
         subscribeForData();
     }
@@ -99,8 +108,10 @@ public class MainActivity extends AppCompatActivity {
                         .onErrorReturn(throwable -> new ArrayList<>()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(items -> {
-                    paginationAdapter.addItems(items);
-                    paginationAdapter.notifyDataSetChanged();
+//                    paginationAdapter.addItems(items);
+                    recyclerAdapter.addItems(items);
+//                    paginationAdapter.notifyDataSetChanged();
+                    recyclerAdapter.notifyDataSetChanged();
                     loading = false;
                     progressBar.setVisibility(View.INVISIBLE);
                 });
@@ -124,5 +135,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                     return items;
                 });
+    }
+
+    @Override
+    public void stayPosition(int pos) {
+
     }
 }

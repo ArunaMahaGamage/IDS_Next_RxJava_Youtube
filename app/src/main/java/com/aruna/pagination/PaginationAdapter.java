@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by amitshekhar on 15/03/17.
+ * Created by Aruna
  */
 
 public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -47,8 +47,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         static ItemViewHolder create(ViewGroup parent) {
-            return new ItemViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pagination, parent, false));
+            return new ItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pagination, parent, false));
+//            return new ItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.video_item, parent, false));
         }
 
         void bind(String content) {
